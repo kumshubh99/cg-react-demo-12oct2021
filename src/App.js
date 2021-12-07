@@ -1,51 +1,51 @@
 
-// import { useEffect } from "react";
+// import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmpData from "./components/EmpData";
 import Header from "./components/Header";
 
 const App = () => {
-  console.log('App');
+  console.log('Parent component');
   const num = 10;
   const myData = { abc: 15, def: 25 }
   const myArray = [10, 20, 30];
 
-  let dataFromChild = 0;
+  const [dataFromChild, setDataFromChild] = useState(4);
 
-  // useEffect(() => {
-  //   dataFromChild = 45;
-  // }, []);
+  useEffect(() => {
+    console.log('parent useEffect');
+    setDataFromChild(5);
+  }, []);
 
   const parentFun = (arg) => {
     console.log('parentFun');
-    dataFromChild = arg(); // callback
+    setDataFromChild(arg()); // callback
     console.log(dataFromChild);
   }
 
-  // const aNormalFunction = () => {
-  //   console.log('normal funciton');
-  // }
 
   return (
     <div>
       <Header />
-      <h1>CG React App</h1>
-      <p> {dataFromChild} </p>
-
-      {/* This will not work */}
-      {/* <p>{myData} </p> */}
-      {/* This will work  */}
-      <p>{myData.abc} </p>
-      <p>{myData.def} </p>
-      <p>{myArray}</p>
-      <p>{myArray[0]}</p>
-      <p>{num}</p>
-      <EmpData
-        // normalFun={aNormalFunction}
-        callParentFun={parentFun}
-        someData={myData}
-        numToPassToChild={num}
-        anotherData={myData}
-      />
+      <div className="container">
+        <p className="display-4 text-primary" >CG React App</p>
+        <p>Child data in parent component: {dataFromChild} </p>
+        {/* This will not work */}
+        {/* <p>{myData} </p> */}
+        {/* This will work  */}
+        <p>{myData.abc} </p>
+        <p>{myData.def} </p>
+        <p>{myArray}</p>
+        <p>{myArray[0]}</p>
+        <p>{num}</p>
+        <EmpData
+          // normalFun={aNormalFunction}
+          callParentFun={parentFun}
+          someData={myData}
+          numToPassToChild={num}
+          anotherData={myData}
+        />
+      </div>
     </div>
   );
 }
