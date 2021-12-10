@@ -1,12 +1,12 @@
 import React from 'react';
-// import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import AppUser from './models/AppUser';
 
 const Login = (props) => {
 
-    // const history = useHistory();
+    const history = useHistory();
 
     const [appUser, setAppUser] = useState(new AppUser());
     const [credentials, setCredentials] = useState('');
@@ -21,13 +21,13 @@ const Login = (props) => {
     };
 
     const submitAppUser = (event) => {
-
         axios.post(`http://localhost:8082/login`, appUser)
             .then((response) => {
                 console.log(response.data);
-                localStorage.setItem('appUser', appUser);
-                alert("Success");
-                // history.push('/home');
+                // for conditional rendering of a few menu items 
+                sessionStorage.setItem('isUserLoggedIn', true);
+                alert('Success');
+                history.push('/home');
             }).catch((error) => {
                 console.log(error.response);
                 setCredentials("Enter proper credentials.");
@@ -79,7 +79,7 @@ const Login = (props) => {
                     </div>
                 </form>
                 <p className="text-danger">{credentials}</p>
-                {/* <Link to="/register" className="btn btn-primary col-12">Not yet registered? Register</Link> */}
+                <Link to="/register" className="btn btn-primary col-12">Not yet registered? Register</Link>
             </div>
         </div >
     )

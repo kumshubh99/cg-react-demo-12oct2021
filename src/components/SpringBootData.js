@@ -4,8 +4,10 @@ import Employee from "./models/Employee";
 
 const SpringBootData = () => {
 
+    // state - for the component 
     const [emp, setEmp] = useState(new Employee());
     const [newEmpObj, setNewEmpObj] = useState(new Employee());
+    const [displayEmpObj, setDisplayEmpObj] = useState(new Employee());
     const [empList, setEmpList] = useState([]);
 
     const handleEmp = (e) => {
@@ -49,77 +51,88 @@ const SpringBootData = () => {
     }
 
     const submitAddEmp = (evt) => {
+        evt.preventDefault();
         axios.post(`http://localhost:8082/emp/addemp`, newEmpObj)
             .then((response) => {
-                setNewEmpObj(response.data);
-                alert('Employee added successfully.')
+                setDisplayEmpObj(response.data);
+                alert('Employee added successfully.');
+                setNewEmpObj({ firstName: '', salary: '' })
             })
             .catch(() => {
                 alert("Employee could not be added.");
             });
-        evt.preventDefault();
     }
 
     return (
         <div>
 
-            <p className="display-4">Spring Boot Data</p>
+            <p className="display-4 text-primary mt-3">Spring Boot Data</p>
             <p>Search Employee By Id</p>
             <input type="number" id="eid" name="eid" value={emp.eid} onChange={handleEmp} placeholder="Emter eid to search" />
             <input type="submit" name="Find Employee" onClick={submitGetEmpById} />
-            <p>{emp.eid} {emp.firstName} {emp.salary}</p>
+            <p className="text-primary">{emp.eid} {emp.firstName} {emp.salary}</p>
             <p>----------------</p>
             <div>
                 <p>Add New Employee</p>
-                <form onSubmit={submitAddEmp}>
-                    <div>
-                        <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={newEmpObj.firstName}
-                            onChange={handleAddEmp}
-                            placeholder="Enter First Name" />
-                        <input
-                            type="number"
-                            id="salary"
-                            name="salary"
-                            value={newEmpObj.salary}
-                            onChange={handleAddEmp}
-                            placeholder="Enter salary" />
-                        <input
-                            // type="button"
-                            type="submit"
-                            value="Add Employee"
-                        // onClick={submitAddEmp} 
-                        />
-                    </div>
-                </form>
-                <p>{newEmpObj.eid} {newEmpObj.firstName} {newEmpObj.salary}</p>
+                {/* <form onSubmit={submitAddEmp}> */}
+                <div id="addNewEmpDiv">
+                    <input
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        value={newEmpObj.firstName}
+                        onChange={handleAddEmp}
+                        placeholder="Enter First Name" />
+                    <input
+                        type="number"
+                        id="salary"
+                        name="salary"
+                        value={newEmpObj.salary}
+                        onChange={handleAddEmp}
+                        placeholder="Enter salary" />
+                    <input
+                        type="submit"
+                        // type="button"
+                        value="Add Employee"
+                        onClick={submitAddEmp}
+                    />
+                </div>
+                {/* </form> */}
+                <p>New Employee Data: {displayEmpObj.eid} {displayEmpObj.firstName} {displayEmpObj.salary}</p>
             </div>
             <p>----------------</p>
             <div>
                 <div>
                     <p>Get All Employees</p>
                     <input
+                        className="btn btn-primary mb-3"
                         type="button"
                         value="Search All Employees"
                         onClick={submitGetAllEmps}
                     />
                 </div>
-                <div>
-                    {/* {empList} */}
-                    {/* {empList.map((arg, arg2)=> { return the processed data })} */}
-                    {empList.map((emp, k) => {
-                        return (
-                            <div k={k}>{emp.eid} {emp.firstName} {emp.salary} </div>
-                        )
-                    })}
+                <div className="col-4">
+                    <div className="border border-light">
+                        <table className="table table-light table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Eid</th>
+                                    <th>Name</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {empList.map((emp, k) => {
+                                    return (
+                                        <tr k={k}> <td>{emp.eid}</td>  <td>{emp.firstName}</td> <td>{emp.salary}</td></tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
                 <p>----------------</p>
             </div>
-
         </div>
     );
 }
